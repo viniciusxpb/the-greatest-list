@@ -1,0 +1,15 @@
+# dependências caso você instale o sass localmente
+node_modules/
+package-lock.json
+package.json
+
+# artefatos do compilador sass
+*.css.map
+.sass-cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp

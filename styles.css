@@ -1,0 +1,357 @@
+@charset "UTF-8";
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Outfit", system-ui, -apple-system, sans-serif;
+  background: #0d0d1a;
+  color: #e0e0e0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 28px;
+}
+
+.tab {
+  font-family: "Space Mono", "Courier New", monospace;
+  font-size: 12px;
+  padding: 10px 24px;
+  border: 1px solid #333;
+  background: transparent;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+.tab:hover {
+  color: rgb(123.25, 123.25, 123.25);
+  border-color: rgb(76.5, 76.5, 76.5);
+}
+.tab--boas.is-active {
+  background: rgba(80, 250, 123, 0.1);
+  color: #50fa7b;
+  border-color: #50fa7b;
+}
+.tab--chosen.is-active {
+  background: rgba(255, 68, 68, 0.1);
+  color: #ff4444;
+  border-color: #ff4444;
+}
+.tab--meh.is-active {
+  background: rgba(136, 136, 136, 0.1);
+  color: #aaaaaa;
+  border-color: #888888;
+}
+
+.intro {
+  margin-bottom: 32px;
+  text-align: center;
+}
+.intro__title {
+  font-family: "Space Mono", "Courier New", monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+.intro__title-accent {
+  background: linear-gradient(90deg, #e94560, #f5a623, #50fa7b, #bd93f9);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.intro__subtitle {
+  font-family: "Space Mono", "Courier New", monospace;
+  font-size: 12px;
+  color: #666;
+  margin-top: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+[data-tab=chosen] .intro__title-accent {
+  background: linear-gradient(90deg, #ff0000, #ff4444, #ff6666, #ff0000);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+[data-tab=meh] .intro__title-accent {
+  background: linear-gradient(90deg, #888888, #aaaaaa, #666666, #888888);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.filter-btn {
+  font-family: "Space Mono", "Courier New", monospace;
+  font-size: 11px;
+  padding: 6px 14px;
+  border: 1px solid #333;
+  border-radius: 20px;
+  background: transparent;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+.filter-btn:hover {
+  color: #bbb;
+}
+.filter-btn.is-active {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: #fff;
+}
+
+.filter-btn[data-tag=games].is-active {
+  color: #e94560;
+  border-color: #e94560;
+}
+
+.filter-btn[data-tag=música].is-active {
+  color: #f5a623;
+  border-color: #f5a623;
+}
+
+.filter-btn[data-tag=cinema].is-active {
+  color: #50fa7b;
+  border-color: #50fa7b;
+}
+
+.filter-btn[data-tag=séries].is-active {
+  color: #bd93f9;
+  border-color: #bd93f9;
+}
+
+.filter-btn[data-tag=dub].is-active {
+  color: #8be9fd;
+  border-color: #8be9fd;
+}
+
+.filter-btn[data-tag=tech].is-active {
+  color: #ff79c6;
+  border-color: #ff79c6;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  padding: 14px 16px;
+  border-left: 3px solid #333;
+  transition: background 0.2s ease;
+  animation: card-enter 0.3s ease var(--card-delay, 0ms) both;
+  cursor: pointer;
+}
+.card:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.card__number {
+  font-family: "Space Mono", "Courier New", monospace;
+  font-size: 11px;
+  color: #555;
+  min-width: 28px;
+}
+.card__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #eee;
+  flex: 1;
+  margin: 0;
+}
+.card__tag {
+  font-family: "Space Mono", "Courier New", monospace;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 2px 8px;
+  border: 1px solid;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.card__body {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  margin-top: 0;
+}
+.card__desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #999;
+  margin: 0;
+  font-weight: 300;
+  padding-left: 40px;
+}
+.card__quote {
+  font-family: "Space Mono", "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #f5a623;
+  margin: 10px 0 0 40px;
+  padding: 4px 0 4px 12px;
+  font-style: italic;
+  border-left: 2px solid #333;
+}
+.card__quote-author {
+  color: #666;
+  font-style: normal;
+  font-size: 10px;
+}
+.card.is-expanded .card__body {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 10px;
+}
+
+.card[data-tag=games] {
+  border-left-color: #e94560;
+}
+
+.card__tag[data-tag=games] {
+  color: #e94560;
+  border-color: #e94560;
+}
+
+.card[data-tag=música] {
+  border-left-color: #f5a623;
+}
+
+.card__tag[data-tag=música] {
+  color: #f5a623;
+  border-color: #f5a623;
+}
+
+.card[data-tag=cinema] {
+  border-left-color: #50fa7b;
+}
+
+.card__tag[data-tag=cinema] {
+  color: #50fa7b;
+  border-color: #50fa7b;
+}
+
+.card[data-tag=séries] {
+  border-left-color: #bd93f9;
+}
+
+.card__tag[data-tag=séries] {
+  color: #bd93f9;
+  border-color: #bd93f9;
+}
+
+.card[data-tag=dub] {
+  border-left-color: #8be9fd;
+}
+
+.card__tag[data-tag=dub] {
+  color: #8be9fd;
+  border-color: #8be9fd;
+}
+
+.card[data-tag=tech] {
+  border-left-color: #ff79c6;
+}
+
+.card__tag[data-tag=tech] {
+  color: #ff79c6;
+  border-color: #ff79c6;
+}
+
+[data-tab=chosen] .card {
+  border-left-color: #ff4444;
+}
+
+[data-tab=meh] .card {
+  border-left-color: #888888;
+}
+
+@keyframes card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+@media (max-width: 480px) {
+  .app {
+    padding: 24px 12px;
+  }
+  .tab {
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+  .intro__title {
+    font-size: 18px;
+  }
+  .card__desc,
+  .card__quote {
+    padding-left: 0;
+    margin-left: 0;
+  }
+  .card__quote {
+    margin-top: 10px;
+    padding-left: 12px;
+  }
+}
