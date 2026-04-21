@@ -1,8 +1,6 @@
 (function () {
   "use strict";
 
-  const DATA = { boas: items, chosen: betrayals, meh: meh };
-
   const TITLES = {
     boas: {
       line1: "COISAS QUE NÃO PRECISAVAM",
@@ -25,6 +23,9 @@
     tab: "boas",
     filter: "todos",
     expandedId: null,
+    entries: [],
+    tags: [],
+    allFilters: ["todos"],
   };
 
   const $app = document.querySelector("[data-app]");
@@ -45,6 +46,18 @@
     })[ch]);
   }
 
+  function entryHasTag(entry, tagId) {
+    return Array.isArray(entry.tags) && entry.tags.includes(tagId);
+  }
+
+  function primaryTag(entry) {
+    return Array.isArray(entry.tags) && entry.tags.length > 0 ? entry.tags[0] : null;
+  }
+
+  function entriesForSection(sectionId) {
+    return state.entries.filter((e) => e.sectionId === sectionId);
+  }
+
   function renderTabs() {
     $tabs.querySelectorAll("button").forEach((btn) => {
       btn.classList.toggle("is-active", btn.dataset.tab === state.tab);
@@ -54,14 +67,14 @@
 
   function renderHeader() {
     const titles = TITLES[state.tab];
-    const count = DATA[state.tab].length;
+    const count = entriesForSection(state.tab).length;
     $line1.textContent = titles.line1;
     $line2.textContent = titles.line2;
     $subtitle.textContent = titles.sub(count);
   }
 
   function renderFilters() {
-    const html = allTags
+    const html = state.allFilters
       .map((tag) => {
         const isActive = state.filter === tag;
         const tagAttr = tag === "todos" ? "" : ` data-tag="${escapeHtml(tag)}"`;
@@ -72,27 +85,32 @@
   }
 
   function renderList() {
-    const current = DATA[state.tab];
+    const sectionEntries = entriesForSection(state.tab);
     const filtered =
       state.filter === "todos"
-        ? current
-        : current.filter((item) => item.tag === state.filter);
+        ? sectionEntries
+        : sectionEntries.filter((e) => entryHasTag(e, state.filter));
 
     const html = filtered
-      .map((item, index) => {
-        const isExpanded = state.expandedId === item.id;
-        const quoteHtml = item.quote
-          ? `<p class="card__quote">"${escapeHtml(item.quote.text)}" <span class="card__quote-author">— ${escapeHtml(item.quote.author)}</span></p>`
+      .map((entry, index) => {
+        const isExpanded = state.expandedId === entry.id;
+        const primary = primaryTag(entry);
+        const tagBadges = (entry.tags || [])
+          .map((t) => `<span class="card__tag" data-tag="${escapeHtml(t)}">${escapeHtml(t)}</span>`)
+          .join("");
+        const quoteHtml = entry.quote
+          ? `<p class="card__quote">"${escapeHtml(entry.quote.text)}" <span class="card__quote-author">— ${escapeHtml(entry.quote.author)}</span></p>`
           : "";
+        const primaryAttr = primary ? ` data-tag="${escapeHtml(primary)}"` : "";
         return `
-          <article class="card${isExpanded ? " is-expanded" : ""}" data-id="${item.id}" data-tag="${escapeHtml(item.tag)}" style="--card-delay: ${index * 30}ms">
+          <article class="card${isExpanded ? " is-expanded" : ""}" data-id="${entry.id}"${primaryAttr} style="--card-delay: ${index * 30}ms">
             <header class="card__header">
-              <span class="card__number">#${item.id}</span>
-              <h2 class="card__title">${escapeHtml(item.title)}</h2>
-              <span class="card__tag" data-tag="${escapeHtml(item.tag)}">${escapeHtml(item.tag)}</span>
+              <span class="card__number">#${entry.id}</span>
+              <h2 class="card__title">${escapeHtml(entry.name)}</h2>
+              ${tagBadges}
             </header>
             <div class="card__body">
-              <p class="card__desc">${escapeHtml(item.desc)}</p>
+              <p class="card__desc">${escapeHtml(entry.description)}</p>
               ${quoteHtml}
             </div>
           </article>
@@ -108,6 +126,10 @@
     renderHeader();
     renderFilters();
     renderList();
+  }
+
+  function renderError(message) {
+    $list.innerHTML = `<p style="text-align:center;color:#ff6666;font-family:monospace">${escapeHtml(message)}</p>`;
   }
 
   $tabs.addEventListener("click", (event) => {
@@ -144,5 +166,24 @@
     });
   });
 
-  render();
+  Promise.all([
+    fetch("entries.json").then((r) => {
+      if (!r.ok) throw new Error(`entries.json: HTTP ${r.status}`);
+      return r.json();
+    }),
+    fetch("tags.json").then((r) => {
+      if (!r.ok) throw new Error(`tags.json: HTTP ${r.status}`);
+      return r.json();
+    }),
+  ])
+    .then(([entries, tags]) => {
+      state.entries = entries;
+      state.tags = tags;
+      state.allFilters = ["todos", ...tags.map((t) => t.id)];
+      render();
+    })
+    .catch((err) => {
+      console.error(err);
+      renderError("Falha ao carregar os dados. Veja o console pra detalhes.");
+    });
 })();

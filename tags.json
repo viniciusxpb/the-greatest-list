@@ -1,0 +1,26 @@
+[
+  {
+    "id": "games",
+    "color": "#e94560"
+  },
+  {
+    "id": "música",
+    "color": "#f5a623"
+  },
+  {
+    "id": "cinema",
+    "color": "#50fa7b"
+  },
+  {
+    "id": "séries",
+    "color": "#bd93f9"
+  },
+  {
+    "id": "dub",
+    "color": "#8be9fd"
+  },
+  {
+    "id": "tech",
+    "color": "#ff79c6"
+  }
+]
